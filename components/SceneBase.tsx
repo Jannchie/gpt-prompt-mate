@@ -1,6 +1,7 @@
 import { useChat } from '@/utils'
 import { useState, useEffect } from 'react'
-import { Container, Flex, TextField } from 'roku-ui'
+import { Container, Flex, Notice, Panel, TextField } from 'roku-ui'
+import { CarbonError } from '@roku-ui/icons-carbon'
 import { type Message } from '../pages/api/chat'
 import { MessageComponent } from './MessageComponent'
 
@@ -40,6 +41,7 @@ export function SceneBase ({ prompts }: { prompts: Message[] }) {
   useEffect(() => {
     if (data) {
       if (data.choices) {
+        data.choices[0].message.content = data.choices[0].message.content.trim()
         setMsgs([...msgs, data.choices[0].message])
       } else {
         try {
@@ -69,25 +71,27 @@ export function SceneBase ({ prompts }: { prompts: Message[] }) {
               }} />
           ) }
         </Flex>
-        <div>
-          { error }
-          <div style={{ textAlign: 'center' }}>Input Your Message</div>
-          <TextField value={msg} setValue={setMsg} style={{ width: '100%' }} onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              setMsgs([...msgs, {
-                role: 'user',
-                content: msg,
-              }])
-              setMsg('')
-              void trigger({
-                messages: [...msgs, {
+        <Flex direction="column" gap="0.5rem">
+          { error ?? <Notice icon={<CarbonError style={{ width: '1rem' }} />} color="danger" title="Error" desc={error} /> }
+          <Panel padding border>
+            <div style={{ textAlign: 'left' }}>Input Your Message</div>
+            <TextField value={msg} setValue={setMsg} style={{ width: '100%' }} onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                setMsgs([...msgs, {
                   role: 'user',
-                  content: msg,
-                }],
-              })
-            }
-          }} />
-        </div>
+                  content: msg.trim(),
+                }])
+                setMsg('')
+                void trigger({
+                  messages: [...msgs, {
+                    role: 'user',
+                    content: msg.trim(),
+                  }],
+                })
+              }
+            }} />
+          </Panel>
+        </Flex>
       </Flex>
     </Container>
   )

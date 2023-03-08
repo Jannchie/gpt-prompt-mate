@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import HttpsProxyAgent from 'https-proxy-agent'
+import { getToken } from './utils'
 export default async function handler (
   req: NextApiRequest,
   res: NextApiResponse,
@@ -12,11 +13,11 @@ export default async function handler (
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: 'Hello!' }],
     }
-
+    const token = getToken()
     const headers = {
       'Content-Type': 'application/json',
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${token}`,
     }
     const proxy = process.env.PROXY_URL
     const options = {

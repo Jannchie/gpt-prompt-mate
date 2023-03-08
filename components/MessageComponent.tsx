@@ -11,14 +11,17 @@ export function MessageComponent ({ message, loading = false }: { message: Messa
   }
   const style: CSSProperties = {
     padding: '0.5rem',
+    whiteSpace: 'pre-wrap',
+    fontFamily: 'monospace',
     textAlign,
   }
   if (message.role === 'system') {
     style.color = 'hsl(var(--r-frontground-3))'
-    style.fontSize = '0.5rem'
+    style.fontSize = '0.25rem'
   } else if (message.role === 'assistant') {
     style.background = 'hsl(var(--r-background-1))'
-    style.borderRadius = '0.5rem'
+    style.fontSize = '0.25rem'
+    style.borderRadius = '0.25rem'
   }
   const [progressing, setProgressing] = useState(true)
   if (message.role === 'assistant' && (progressing || loading)) {
@@ -29,7 +32,7 @@ export function MessageComponent ({ message, loading = false }: { message: Messa
         }]}
       style={style} />
   }
-  return <div key={message.content} style={style}>
+  return <pre key={message.content} style={style}>
     { message.content }
-  </div>
+  </pre>
 }

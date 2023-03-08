@@ -1,6 +1,16 @@
-import { Container, Flex, Panel } from 'roku-ui'
+import { Container, Flex, Panel, TextField } from 'roku-ui'
 import Head from 'next/head'
 import Link from 'next/link'
+import data from '@/data'
+import { useEffect, useState } from 'react'
+
+function TokenField () {
+  const [value, setValue] = useState('')
+  useEffect(() => {
+    localStorage.setItem('openai-token', value)
+  }, [value])
+  return <TextField placeholder="OpenAI API Key" style={{ width: '100%' }} type="password" value={value} setValue={setValue} />
+}
 export default function Home () {
   return (
     <>
@@ -11,30 +21,42 @@ export default function Home () {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Container>
-          <div style={{
-            fontSize: '2rem',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            padding: '1rem',
-            background: 'linear-gradient(to right, #4b86b4, #8d4bbb)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>GPT Prompt Mate</div>
-          <Flex gap="0.5rem">
-            <Link href="/scenes/06">
-              <Panel padding border>
-                <div style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 'bold',
-                }}>
-                06 Girl
-                </div>
-                <div>
-                AI.
-                </div>
-              </Panel>
-            </Link>
+        <Container style={{ maxWidth: 768 }}>
+          <Flex direction="column" gap="1rem">
+            <div style={{
+              fontSize: '2rem',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              padding: '1rem',
+              background: 'linear-gradient(to right, #4b86b4, #8d4bbb)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>GPT Prompt Mate</div>
+            <TokenField />
+            <Flex gap="0.5rem">
+              {
+                Object.keys(data).map((k, i) => {
+                  const d = data[k]
+                  return (
+                    <Link key={k} style={{ flexGrow: 1, flexBasis: 0 }} href={`/scenes/${k}`}>
+                      <Panel padding border>
+                        <div style={{
+                          fontSize: '1.5rem',
+                          fontWeight: 'bold',
+                        }}>
+                          { d.name }
+                        </div>
+                        <div style={{
+                          fontSize: '1rem',
+                        }}>
+                          { d.desc }
+                        </div>
+                      </Panel>
+                    </Link>
+                  )
+                })
+              }
+            </Flex>
           </Flex>
         </Container>
       </main>

@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import HttpsProxyAgent from 'https-proxy-agent'
+import { getToken } from './utils'
 export interface ReqBody {
   messages: Message[]
   model?: string
@@ -26,7 +27,7 @@ export default async function handler (
     const headers = {
       'Content-Type': 'application/json',
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${getToken()}`,
     }
     const proxy = process.env.PROXY_URL
     const agent = proxy ? HttpsProxyAgent(proxy) : undefined

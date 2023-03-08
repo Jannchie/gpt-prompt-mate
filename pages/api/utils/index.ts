@@ -1,5 +1,7 @@
-import { Configuration, OpenAIApi } from 'openai'
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-})
-export const openai = new OpenAIApi(configuration)
+export function getToken () {
+  const storageToken = localStorage.getItem('openai-token')
+  if (storageToken && storageToken !== '') {
+    return storageToken
+  }
+  return process.env.OPENAI_API_KEY as string
+}
