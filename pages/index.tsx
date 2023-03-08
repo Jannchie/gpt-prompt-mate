@@ -4,8 +4,11 @@ import Link from 'next/link'
 import data from '@/data'
 import { useEffect, useState } from 'react'
 
+function isBrowser () {
+  return typeof window !== 'undefined'
+}
 function TokenField () {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(isBrowser() ? (localStorage.getItem('openai-token') ?? '') : '')
   useEffect(() => {
     localStorage.setItem('openai-token', value)
   }, [value])

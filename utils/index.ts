@@ -10,7 +10,14 @@ export function useData () {
   return res
 }
 
+export function getToken () {
+  const localToken = localStorage.getItem('openai-token')
+  if (localToken && localToken !== '') return localToken
+  return process.env.OPENAI_API_KEY
+}
+
 interface Messages { messages: Message[] }
+
 export function useChat (): SWRMutationResponse<any, Error, Messages> {
   const res = useSWRMutation('/api/chat', async (url, { arg }: { arg: Messages }) => {
     const resp = await fetch(url, {
@@ -20,6 +27,7 @@ export function useChat (): SWRMutationResponse<any, Error, Messages> {
       },
       body: JSON.stringify({
         messages: arg.messages,
+        token: getToken(),
       }),
     })
     if (!resp.ok) {
